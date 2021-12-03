@@ -1,4 +1,4 @@
-package com.ricardohui.maximumPathSum;
+package com.ricardohui.javaCodingInterview.maximumPathSum;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
