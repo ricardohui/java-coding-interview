@@ -3,9 +3,9 @@ package com.ricardohui.javaCodingInterview.breathFirstSearch;
 import java.util.*;
 import java.util.stream.Collectors;
 
-;
 
-class fLevelOrderTraversal {
+
+class LevelOrderTraversal {
     public static List<List<Integer>> traverse(TreeNode root) {
         List<List<Integer>> result = new ArrayList<List<Integer>>();
 
