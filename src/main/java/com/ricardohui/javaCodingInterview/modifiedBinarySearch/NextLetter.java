@@ -7,9 +7,7 @@ class NextLetter {
         int start = 0;
         int end = letters.length-1;
 
-        if (key > letters[end]) {
-            return letters[start];
-        }
+
 
         while (start <= end) {
             int midpoint = start + (end - start) / 2;

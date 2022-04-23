@@ -1,4 +1,4 @@
-package com.ricardohui.javaCodingInterview.KthElement;
+package com.ricardohui.javaCodingInterview.kWayMerge;
 
 import java.util.*;
 

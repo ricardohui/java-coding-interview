@@ -4,50 +4,52 @@ import java.util.*;
 
 class FrequentNumber {
     int seq;
-    int value;
-    int frequency
+    int frequency;
 
-    public FrequentNumber(int value, int seq, int frequency) {
+    public FrequentNumber(int seq, int frequency) {
         this.seq = seq;
-        this.value = value;
         this.frequency = frequency;
     }
 }
-
-class ElementCompartor implements Comparator<FrequentNumber> {
-    @Override
-    public int compare(com.ricardohui.javaCodingInterview.KthElement.FrequentNumber o1,
-                       com.ricardohui.javaCodingInterview.KthElement.FrequentNumber o2) {
-        if (o2.frequency !=  o1.frequency) {
-            return o2.frequency -o1.frequency;
-        }
-
-        return o2.seq - o1.seq;
-    }
-}
-
-
 class FrequencyStack {
-    int seq =  0
-    Map<Integer, Integer> characterFrequencyMap = new HashMap<>();
-    Queue<FrequentNumber> maxHeap = new PriorityQueue(new ElementCompartor());
+
+    static int seq = 0;
+    Map<Integer, FrequentNumber> characterFrequencyMap = new HashMap<>();
+    Queue<Integer> maxHeap = new PriorityQueue((c1, c2)-> {
+        int difference = characterFrequencyMap.get(c2).frequency - characterFrequencyMap.get(c1).frequency;
+        if (difference == 0) {
+            return  characterFrequencyMap.get(c2).seq - characterFrequencyMap.get(c1).seq;
+        }
+        return difference;
+    });
 
     public void push(int num) {
-        characterFrequencyMap.put(num, characterFrequencyMap.get(num, 0) + 1);
-        maxHeap.add(new FrequentNumber(num, seq++, characterFrequencyMap.get(num)));
+        int newFrequency;
+        if (!characterFrequencyMap.containsKey(num)){
+            newFrequency = 1;
+        }else{
+            newFrequency = characterFrequencyMap.get(num).frequency+1;
+        }
+        FrequentNumber frequentNumber = new FrequentNumber(seq++, newFrequency);
+        characterFrequencyMap.put(num, frequentNumber);
+        maxHeap.clear();
+        maxHeap.addAll(characterFrequencyMap.keySet());
     }
 
     public int pop() {
-        if (maxHeap.isEmpty()) return -1;
-        FrequentNumber frequentNumber = maxHeap.poll();
-        int num = frequentNumber.value;
-        if (characterFrequencyMap.get(num) > 1) {
-            characterFrequencyMap.put(num, characterFrequencyMap.get(num) - 1);
-        }else{
+        if (maxHeap.isEmpty()) {
+            return -1;
+        }
+        int num = maxHeap.poll();
+        int newFrequency = characterFrequencyMap.get(num).frequency;
+        FrequentNumber frequentNumber = new FrequentNumber(characterFrequencyMap.get(num).seq, newFrequency -1);
+        characterFrequencyMap.put(num,  frequentNumber);
+        if (characterFrequencyMap.get(num).frequency <= 0) {
             characterFrequencyMap.remove(num);
+        }else{
+            maxHeap.add(num);
         }
         return num;
-
     }
 
     public static void main(String[] args) {
