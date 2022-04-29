@@ -1,11 +1,4 @@
-class ListNode {
-    int value = 0;
-    ListNode next;
-
-    ListNode(int value) {
-        this.value = value;
-    }
-}
+package com.ricardohui.javaCodingInterview.reversalLinkedList;
 
 class ReverseLinkedList {
 
