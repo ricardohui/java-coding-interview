@@ -25,6 +25,10 @@ public class Graph{
             //this.adjacencyList[destination].insertAtEnd(source);
         }
     }
+
+    public int getVertices() {
+        return this.vertices;
+    }
     public void printGraph()
     {
         System.out.println(">>Adjacency List of Directed Graph<<");
