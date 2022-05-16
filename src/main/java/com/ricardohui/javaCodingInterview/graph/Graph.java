@@ -51,4 +51,17 @@ public class Graph{
             }
         }
     }
+
+    public Graph getTranspose() {
+        Graph g = new Graph(vertices);
+        for (int j = 0; j < vertices; j++) {
+            DoublyLinkedList.Node childNode = adjacencyList[j].headNode;
+            while (childNode != null) {
+                g.addEdge((Integer) childNode.data, j);
+                childNode = childNode.nextNode;
+            }
+
+        }
+        return g;
+    }
 }

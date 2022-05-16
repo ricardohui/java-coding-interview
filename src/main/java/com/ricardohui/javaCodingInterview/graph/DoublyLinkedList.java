@@ -36,6 +36,15 @@ public class DoublyLinkedList<T> {
         return size;
     }
 
+    public T get(int position){
+        int i = 0;
+        Node currentNode = getHeadNode();
+        while (i < position && currentNode!=null) {
+            currentNode = currentNode.nextNode;
+            i++;
+        }
+        return currentNode.data;
+    }
     public void insertAtHead(T data) {
         Node newNode = new Node();
         newNode.data = data;
