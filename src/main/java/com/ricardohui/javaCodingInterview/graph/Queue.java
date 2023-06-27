@@ -44,6 +44,7 @@ public class Queue<V> {
         back = (back + 1) % maxSize; //to keep the index in range
         array[back] = value;
         currentSize++;
+
     }
 
     public V dequeue (){
@@ -55,5 +56,20 @@ public class Queue<V> {
         currentSize--;
 
         return temp;
+    }
+
+    public void printQueue(){
+        //print
+        int i = 0;
+        while (i < maxSize){
+            int index = (i + front) % maxSize;
+            if (array[index] == null) {
+                break;
+            }
+            System.out.print(array[index]+" ");
+            i++;
+        }
+        System.out.println();
+
     }
 }

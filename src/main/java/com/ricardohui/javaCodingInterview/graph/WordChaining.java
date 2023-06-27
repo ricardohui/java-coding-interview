@@ -61,6 +61,7 @@ class WordChaining {
                     }
                 }
             }
+
             return false;
         }
 
@@ -68,14 +69,13 @@ class WordChaining {
         // Challenge function
         boolean canChainWords(int listSize) {
             // Empty list and single word cannot form a chain
-            if (listSize < 2) {
+
+            if (listSize <= 1) {
                 return false;
             }
 
-            if (this.g.size() > 0) {
-                if (this.outEqualsIn()) {
-                    return this.canChainWordsRec(this.g.get(0), this.g.get(0));
-                }
+            if (!this.g.isEmpty() && this.outEqualsIn()) {
+                return this.canChainWordsRec(this.g.get(0), this.g.get(0));
             }
 
             return false;

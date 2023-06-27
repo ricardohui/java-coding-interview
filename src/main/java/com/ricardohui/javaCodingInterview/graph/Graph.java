@@ -1,5 +1,7 @@
 package com.ricardohui.javaCodingInterview.graph;
 
+import java.util.Iterator;
+
 public class Graph{
     int vertices; //Total number of vertices in graph
     DoublyLinkedList<Integer> adjacencyList[]; //An array of linked lists to store adjacent vertices.
@@ -22,7 +24,43 @@ public class Graph{
             this.adjacencyList[source].insertAtEnd(destination);
 
             //for undirected graph uncomment the line below
-            //this.adjacencyList[destination].insertAtEnd(source);
+            this.adjacencyList[destination].insertAtEnd(source);
+        }
+    }
+
+    public void removeEdge(int source, int destination) {
+        if (source < vertices && destination < vertices) {
+            DoublyLinkedList<Integer>.Node childNode = this.adjacencyList[source].headNode;
+            DoublyLinkedList<Integer>.Node parent = null;
+            while (childNode != null) {
+                if (childNode.data == destination) {
+                    if (parent != null){
+                        parent.nextNode = childNode.nextNode;
+                    }else{
+                        this.adjacencyList[source].headNode = childNode.nextNode;
+                    }
+                    break;
+                }
+                parent = childNode;
+                childNode = childNode.nextNode;
+            }
+
+            // for reversed direction
+            childNode = this.adjacencyList[destination].headNode;
+            parent = null;
+            while (childNode != null) {
+                if (childNode.data == destination) {
+                    if (parent != null) {
+                        parent.nextNode = childNode.nextNode;
+                    }else{
+                        this.adjacencyList[source].headNode = childNode.nextNode;
+                    }
+                    break;
+                }
+                parent = childNode;
+                childNode = childNode.nextNode;
+            }
+
         }
     }
 
@@ -64,4 +102,21 @@ public class Graph{
         }
         return g;
     }
+
+
+    public void dfsTraversal(int v, boolean visited[]) {
+        visited[v] = true;
+        int source = 0;
+
+        DoublyLinkedList<Integer>.Node childNode = adjacencyList[v].headNode;
+        while (childNode != null) {
+            if (!visited[childNode.data]) {
+                dfsTraversal(childNode.data,visited );
+            }
+
+            childNode = childNode.nextNode;
+        }
+
+    }
 }
+
