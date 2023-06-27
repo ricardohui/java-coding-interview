@@ -1,3 +1,6 @@
+
+/* https://www.educative.io/module/lesson/algorithms-in-java/m2MwgwXPD5p
+* */
 package com.ricardohui.javaCodingInterview.topologicalSort;
 
 
@@ -5,53 +8,54 @@ import java.util.*;
 
 class TaskScheduling {
     public static boolean isSchedulingPossible(int tasks, int[][] prerequisites) {
+        // initialization two hashtables for graph from edge and indegree
+        Map<Integer, LinkedList<Integer>> adjacentList = new HashMap<>();
+        Map<Integer, Integer> inDegrees = new HashMap<>();
+        Queue<Integer> sources = new LinkedList<>();
+        List<Integer> sortedOrder = new ArrayList<>();
 
-
-        HashMap<Integer, Integer> inDegree = new HashMap<>();
-        HashMap<Integer, List<Integer>> graph = new HashMap<>();
-        // 1. initialise the graph
         for (int i = 0; i < tasks; i++) {
-            inDegree.put(i, 0);
-            graph.put(i, new ArrayList<Integer>());
+            adjacentList.put(i, new LinkedList<>());
+            inDegrees.put(i, 0);
         }
 
-        // 2. build the graph
-        for (int i = 0; i < prerequisites.length; i++) {
-            int parent = prerequisites[i][0];
-            int child = prerequisites[i][1];
-
-            graph.get(parent).add(child);
-            inDegree.put(child, inDegree.get(child) + 1);
+        // build two hashtables for graph from edge and indegrees
+        for (int[] prereq : prerequisites) {
+            int start = prereq[0];
+            int end = prereq[1];
+            adjacentList.get(start).add(end);
+            inDegrees.put(end, inDegrees.get(end)+1);
         }
 
-        // 3. vertice with 0 in-degrees
-        Queue<Integer> queue = new LinkedList<>();
-        for (Map.Entry<Integer, Integer> entry: inDegree.entrySet()) {
-            if (entry.getValue() == 0) {
-                queue.offer(entry.getKey());
+        // find all vertices with 0 indegrees
+        for (int i = 0; i < tasks; i++) {
+            if (inDegrees.get(i) == 0) {
+
+                sources.add(i);
             }
         }
 
-        ArrayList<Integer> result = new ArrayList<>();
+        // loop through vertices
+        while (!sources.isEmpty())
+        {
+            int vertice = sources.poll();
+            sortedOrder.add(vertice);
 
-        // 4. while !vertice is not empty
-        while (!queue.isEmpty()) {
-            Integer vertice = queue.poll();
-            result.add(vertice);
-            List<Integer> children = graph.get(vertice);
-            for (Integer child : children) {
-                inDegree.put(child, inDegree.get(child) - 1);
-                // add source to the queue
-                if (inDegree.get(child) == 0) {
-                    queue.offer(child);
+            ListIterator<Integer> listIterator = adjacentList.get(vertice).listIterator();
+            while (listIterator.hasNext()) {
+                Integer child = listIterator.next();
+                inDegrees.put(child, inDegrees.get(child) - 1);
+                if (inDegrees.get(child) == 0) {
+                    sources.add(child);
                 }
             }
         }
 
 
-        // 5. check cycle
+        // check cycle
+        System.out.println(sortedOrder);
 
-        return result.size() == tasks;
+        return sortedOrder.size() == tasks;
     }
 
     public static void main(String[] args) {
