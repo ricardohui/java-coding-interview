@@ -14,30 +14,29 @@ class PartitionSet {
 
 
     private boolean canPartitionRecursive(Boolean[][] dp, int[] num, int sum, int currentIndex) {
+
         if (sum == 0) {
             return true;
         }
 
-        if (num.length == 0|| currentIndex >= num.length) {
+        if (num.length == 0 || currentIndex >= num.length) {
             return false;
         }
 
-        if (dp[currentIndex][sum] != null) {
-            return dp[currentIndex][sum];
+        if (dp[currentIndex][sum] == null) {
+            if(num[currentIndex] <= sum){
+                if (canPartitionRecursive(dp, num, sum - num[currentIndex], currentIndex+1)){
+                    dp[currentIndex][sum] = true;
+                    return true;
+                }
+            }
+
+            dp[currentIndex][sum] = canPartitionRecursive(dp, num, sum, currentIndex + 1);
         }
-
-
-        boolean left = false;
-
-        if (num[currentIndex] <= sum){
-            left = canPartitionRecursive(dp, num, sum-num[currentIndex], currentIndex+1);
-        }
-
-        boolean right = canPartitionRecursive(dp,num, sum, currentIndex + 1);
-
-        dp[currentIndex][sum] = left || right;
 
         return dp[currentIndex][sum];
+
+
     }
 
     public static void main(String[] args) {
