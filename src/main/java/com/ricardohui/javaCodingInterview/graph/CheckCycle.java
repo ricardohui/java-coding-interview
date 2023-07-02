@@ -1,41 +1,51 @@
 package com.ricardohui.javaCodingInterview.graph;
 
+import java.util.HashMap;
+import java.util.HashSet;
+
 class CheckCycle {
     public static boolean detectCycle(Graph g){
-        int numOfVertices = g.getVertices();
 
-        boolean[] visited = new boolean[numOfVertices];
-        boolean[] stackFlag = new boolean[numOfVertices];
+        // define a visited hashset
+        HashSet<Integer> visited = new HashSet<>();
 
-        for (int i = 0; i < numOfVertices; i++) {
-            if(dfs(g, i, visited, stackFlag)) return true;
+        // get the first element
+        for (int startingNode = 0; startingNode < g.vertices; startingNode++) {
+            HashMap<Integer, Integer> frequency = new HashMap<>();
+
+            if (dfs(g, visited, startingNode, frequency)) {
+                return true;
+            }
         }
+
+        // call dfs
+
 
         return false;
     }
 
-    public static boolean dfs(Graph graph, int source, boolean[] visited, boolean[] stackFlag){
-        DoublyLinkedList<Integer>.Node childNode = graph.adjacencyList[source].headNode;
 
-        if (stackFlag[source]){
+    static boolean dfs(Graph g, HashSet<Integer> visited, Integer currentIndex, HashMap<Integer, Integer> frequency){
+        if(visited.contains(currentIndex) && frequency.getOrDefault(currentIndex, 0) >= 1) {
+            // cycle detected
             return true;
         }
 
-        if(visited[source]){
-            return false;
-        }
+        // marked visit
+        visited.add(currentIndex);
+        frequency.put(currentIndex, frequency.getOrDefault(currentIndex, 0)+1);
 
-        visited[source] = true;
-        stackFlag[source] = true;
+        // loop each edge
+        DoublyLinkedList<Integer>.Node edge = g.adjacencyList[currentIndex].getHeadNode();
+        while (edge != null) {
 
-        while (childNode != null) {
-            if ( dfs(graph, childNode.data, visited, stackFlag)){
+            if (dfs(g, visited, edge.data, frequency)){
                 return true;
             }
-
-            childNode = childNode.nextNode;
+            frequency.put(edge.data, frequency.get(edge.data) - 1); //backtrack missed!!!
+            edge = edge.nextNode;
         }
-        stackFlag[source] = false;
+
         return false;
     }
 
