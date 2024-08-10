@@ -1,15 +1,23 @@
+package com.ricardohui.javaCodingInterview.cyclicSort;
+
 class CyclicSort {
 
     public static void sort(int[] nums) {
+        // write a cyclic sort algorithm
+
+        StringBuffer sb = new StringBuffer();
+        
         int i = 0;
         while (i < nums.length) {
-            int j =  nums[i] - 1;
-            if (nums[i] != i+1)
-                swap(nums, i, j);
-            else
+            if (nums[i] != i + 1) {
+                swap(nums, i, nums[i] - 1);
+            } else {
                 i++;
+            }
         }
     }
+
+
 
     private static void swap(int[] nums, int i, int j) {
         int temp = nums[i];
@@ -37,3 +45,5 @@ class CyclicSort {
         System.out.println();
     }
 }
+
+// generate unit tests for this class

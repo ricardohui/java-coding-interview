@@ -3,18 +3,17 @@ package com.ricardohui.javaCodingInterview.graph;
 public class CheckNumEdges {
 
     public static int numEdges(Graph g) {
-        // Write -- Your -- Code
         int count = 0;
 
-
-        for (int i = 0; i < g.getVertices(); i++) {
-            DoublyLinkedList<Integer>.Node childNode = g.adjacencyList[i].headNode;
-            while (childNode!=null){
+        for (int i = 0; i < g.vertices; i++) {
+            DoublyLinkedList<Integer>.Node edge = g.adjacencyList[i].getHeadNode();
+            while (edge != null) {
                 count++;
-                childNode = childNode.nextNode;
+                edge = edge.nextNode;
             }
         }
-        return count / 2;
+
+        return count/2;
     }
 
 

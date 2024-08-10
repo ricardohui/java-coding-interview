@@ -5,58 +5,52 @@ import java.util.*;
 
 public class CheckTree {
     public static boolean isTree(Graph g) {
-        // Write -- Your -- Code
-        int numOfVertices = g.vertices;
-        Map<Integer, Integer> inDegrees = new HashMap<>();
-        Queue<Integer> queue = new Queue<>(g.vertices);
-
-        // build inDegrees
-        for (int i = 0; i < numOfVertices; i++) {
-            inDegrees.putIfAbsent(i, 0);
-            DoublyLinkedList<Integer>.Node childNode = g.adjacencyList[i].headNode;
-            while (childNode != null) {
-                inDegrees.put(childNode.data, inDegrees.getOrDefault(childNode.data, 0) + 1);
-                childNode = childNode.nextNode;
-            }
+        HashMap<Integer,Integer> indegree = new HashMap<>();
+        boolean[] visited = new boolean[g.vertices];
+        // collect indegree by doing dfs
+        for (int i = 0; i < g.vertices; i++) {
+            dfs(g, i, visited, indegree);
         }
 
 
-        // find out nodes with inDegrees with 0
-        List<Integer> verticesWithZeroInDegree = new ArrayList<>();
-        for (Map.Entry<Integer, Integer> child : inDegrees.entrySet()) {
-            if (child.getValue() == 0) {
-                verticesWithZeroInDegree.add(child.getKey());
-            }
-            if (child.getValue() > 1) {
-                return false;
-            }
+        // find the root with the indegree 0
+        List<Integer> vertexWithZeroDegree = new ArrayList<>();
+        for (int i = 0; i < g.vertices; i++) {
+            if (indegree.getOrDefault(i, 0)==0) vertexWithZeroDegree.add(i);
         }
 
-        System.out.println("number of vertices with zero indegress " + verticesWithZeroInDegree.size());
-        if (verticesWithZeroInDegree.size() != 1) {
+        if (vertexWithZeroDegree.size() <= 0) {
             return false;
         }
 
-        Integer root = verticesWithZeroInDegree.get(0);
-        boolean[] visited = new boolean[numOfVertices];
-        dfs(g, root, visited);
 
+        //dfs once to see if every vertex is visited (coompleted)
+        int root = vertexWithZeroDegree.get(0);
+        Arrays.fill(visited, false);
+        dfs(g,root,visited, indegree);
 
-        for (boolean v : visited) {
-            if (!v) return false;
+        for (boolean value: visited) {
+            if (!value) return false;
         }
-        return true;
+
+        return  true;
     }
 
-    public static void dfs(Graph graph, int root, boolean[] visited) {
-        DoublyLinkedList<Integer>.Node childNode = graph.adjacencyList[root].headNode;
-        visited[root] = true;
+    public static void dfs(Graph g, Integer source, boolean[] visited, HashMap<Integer, Integer> indegree){
+        // mark visited
+        visited[source] = true;
+
+
+        DoublyLinkedList<Integer>.Node childNode  =  g.adjacencyList[source].getHeadNode();
         while (childNode != null) {
-            if (!visited[childNode.data]){
-                dfs(graph, childNode.data, visited);
+            if (!visited[childNode.data]) {
+                indegree.put(source, indegree.getOrDefault(source,0)+1);
+                dfs(g, childNode.data, visited, indegree);
             }
             childNode = childNode.nextNode;
         }
+
+
     }
 
     public static void main(String args[]) {

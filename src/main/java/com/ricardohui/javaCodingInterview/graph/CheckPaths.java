@@ -1,33 +1,37 @@
 package com.ricardohui.javaCodingInterview.graph;
 
+
 class CheckPaths {
 
     public static boolean checkPath(Graph g, int source, int destination) {
 
-        boolean[] visited = new boolean[g.getVertices()];
+        boolean[] visited = new boolean[g.vertices];
 
-        return recursion(g, source, destination, visited);
+        return recursion(g, visited, source, destination);
     }
 
-    public static boolean recursion(Graph graph, int vertex, int target, boolean[] visited) {
+    public static boolean recursion(Graph g, boolean[] visited, int vertex, int target){
 
-        DoublyLinkedList<Integer>.Node childNode = graph.adjacencyList[vertex].headNode;
+        // mark visited
         visited[vertex] = true;
-        if (vertex == target) {
-            return true;
-        }
-        while (childNode != null) {
-            if (!visited[childNode.data]){
-                if (recursion(graph, childNode.data, target, visited)) {
+
+        //traverse to the child
+        DoublyLinkedList<Integer>.Node edge  = g.adjacencyList[vertex].getHeadNode();
+        while (edge != null) {
+            if (edge.data == target) {
+                return true;
+            }
+            if (!visited[edge.data]){
+                if(recursion(g, visited, vertex, target)){
                     return true;
                 }
             }
 
-            childNode = childNode.nextNode;
+            edge = edge.nextNode;
         }
         return false;
-
     }
+
 
     public static void main(String args[]) {
 

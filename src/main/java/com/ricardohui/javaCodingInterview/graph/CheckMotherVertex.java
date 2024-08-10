@@ -1,42 +1,64 @@
 package com.ricardohui.javaCodingInterview.graph;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 class CheckMotherVertex {
 
     public static int findMotherVertex(Graph g){
-        Map<Integer, Integer> inDegrees = new HashMap<>();
-        List<Integer> sources = new ArrayList<>(g.getVertices());
+        HashSet<Integer> visited = new HashSet<>();
+        HashMap<Integer, Integer> indegree = new HashMap<>();
+        Queue<Integer> aQueue = new Queue<>(g.vertices);
 
-        // build graph
-        for (int parent = 0; parent < g.getVertices(); parent++) {
-            DoublyLinkedList<Integer>.Node childNode = g.adjacencyList[parent].headNode;
-            while (childNode != null) {
-                inDegrees.put(childNode.data,
-                              inDegrees.getOrDefault(childNode.data, 0) + 1);
+        for (int startingNode = 0; startingNode < g.vertices; startingNode++) {
+            if (visited.contains(startingNode)) continue;
 
-                childNode = childNode.nextNode;
+            aQueue.enqueue(startingNode);
+
+            while (!aQueue.isEmpty()){
+                Integer currentNode = aQueue.dequeue();
+
+                // mark visited
+                visited.add(currentNode);
+
+
+                // add the children to the queue if not visited
+                DoublyLinkedList<Integer>.Node  edge= g.adjacencyList[currentNode].getHeadNode();
+                while (edge != null) {
+                    indegree.put(edge.data, indegree.getOrDefault(edge.data, 0)+1);
+                    if (!visited.contains(edge.data)){
+                        aQueue.enqueue(edge.data);
+                    }
+                    edge = edge.nextNode;
+                }
+
+
             }
         }
 
-        // find out all the vertice with 0 indegree
-        for (int i = 0; i < g.getVertices(); i++) {
-            if (inDegrees.getOrDefault(i, 0) <= 0) {
-                sources.add(i);
+        // check in degree
+        List<Integer> sources = new ArrayList<>(g.vertices);
+        for (int startingIndex = 0; startingIndex < g.vertices; startingIndex++) {
+            if((indegree.get(startingIndex)==0)){
+                sources.add(startingIndex);
             }
         }
-
-        // eliminate the source and add new source to the queue
-
-
-        // check cycle
         if (sources.size() > 0) {
             return sources.get(0);
         }
         return -1;
+
+    }
+
+    public static void main(String args[]) {
+
+        Graph g = new Graph(4);
+        g.addEdge(0,1);
+        g.addEdge(1,2);
+        g.addEdge(3,0);
+        g.addEdge(3,1);
+        g.printGraph();
+        System.out.println("Mother Vertex is: " + findMotherVertex(g));
+
     }
 }
