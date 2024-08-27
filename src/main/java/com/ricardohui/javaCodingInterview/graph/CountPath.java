@@ -7,30 +7,34 @@ import java.util.LinkedList;
 class CountPath {
 
     public static int countPaths(Graph g, int start, int destination) {
-        int numOfVertices = g.getVertices();
-        if (start > numOfVertices || destination > numOfVertices) {
-            return 0;
-        }
-        HashSet<Integer> visited = new HashSet<>();
-        return recursion(g, start,destination, visited);
+        HashSet<Integer> visited = new HashSet<>(g.vertices);
+        return recursion(g, start, destination, visited);
     }
 
-    public static Integer recursion(Graph graph, int parent, int target, HashSet<Integer> visited) {
+    public static int recursion(Graph g, int start, int target, HashSet<Integer> visited){
+
         int sum = 0;
-        visited.add(parent);
-        if (parent == target) {
-            sum = 1;
+
+        DoublyLinkedList<Integer>.Node edge = g.adjacencyList[start].headNode;
+        while (edge!=null) {
+            if (edge.data == target) {
+                return 1;
+            }else{
+                if (!visited.contains(edge.data)) {
+                    visited.add(edge.data);
+                    sum += recursion(g, edge.data, target, visited);    
+                }
+                
+
+            }
+            
+            edge = edge.nextNode;
         }
-        DoublyLinkedList<Integer>.Node childNode = graph.adjacencyList[parent].getHeadNode();
-        while (childNode != null) {
-//            if (!visited.contains(childNode.data)) {
-                visited.add(childNode.data);
-                sum+=recursion(graph, childNode.data, target, visited);
-//            }
-            childNode = childNode.nextNode;
-        }
+
         return sum;
     }
+
+
 
     public static void main(String args[]) {
 
