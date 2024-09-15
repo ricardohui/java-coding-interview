@@ -4,21 +4,28 @@ package com.ricardohui.javaCodingInterview.cyclicSort;
 class FindCorruptNums {
 
     public static int[] findNumbers(int[] nums) {
+         int n = nums.length;
+
         int i = 0;
-        while (i < nums.length) {
-            if (nums[i] != nums[nums[i] - 1]) {
-                swap(nums, i, nums[i]-1);
-            }else{
-                i++;
-            }
+        while (i < n) {
+            int correctPostion = nums[i] - 1;
+            if (nums[i] != nums[correctPostion]) {
+            swap(nums, i, correctPostion);
+        }else{
+            i++;
+        }
         }
 
-        for (int j = 0; j < nums.length; j++) {
-            if (nums[j] != j+1) {
-                return new int[]{j+1, nums[j]};
+         for (int j = 0; j < nums.length; j++) {
+            if (nums[j]!=j+1) {
+                return new int[]{nums[j], j+1};
             }
-        }
-        return new int[] { -1, - 1 };
+         }
+
+         
+
+         return new int[]{-1,-1};
+
     }
 
     private static void swap(int[] arr, int i, int j) {
