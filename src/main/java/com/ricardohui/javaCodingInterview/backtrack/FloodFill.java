@@ -1,97 +1,80 @@
 package com.ricardohui.javaCodingInterview.backtrack;
-public class FloodFill {
-  public static int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
-      // If the starting pixel is already the new color, return the image as is
-      if (image[sr][sc] == newColor) {
-          return image;
-      }
-      
-      // Call the helper function with the starting color
-      fill(image, sr, sc, image[sr][sc], newColor);
-      return image;
-  }
-  
-  private static void fill(int[][] image, int sr, int sc, int startColor, int newColor) {
-      // Check if current position is out of bounds or not the starting color
-      if (sr < 0 || sr >= image.length || sc < 0 || sc >= image[0].length || 
-          image[sr][sc] != startColor) {
-          return;
-      }
-      
-      // Color the current pixel
-      image[sr][sc] = newColor;
-      
-      // Recursively fill in all four directions
-      fill(image, sr + 1, sc, startColor, newColor); // down
-      fill(image, sr - 1, sc, startColor, newColor); // up
-      fill(image, sr, sc + 1, startColor, newColor); // right
-      fill(image, sr, sc - 1, startColor, newColor); // left
-  }
-  
-  // Helper method to print 2D array
-  private static void printImage(int[][] image) {
-      for (int[] row : image) {
-          for (int pixel : row) {
-              System.out.print(pixel + " ");
-          }
-          System.out.println();
-      }
-      System.out.println();
-  }
-  
-  public static void main(String[] args) {
-      // Test Case 1: Basic flood fill
-      System.out.println("Test Case 1: Basic flood fill");
-      int[][] image1 = {
-          {1, 1, 1},
-          {1, 1, 0},
-          {1, 0, 1}
-      };
-      System.out.println("Before:");
-      printImage(image1);
-      
-      int[][] result1 = floodFill(image1, 1, 1, 2);
-      System.out.println("After flood fill (sr=1, sc=1, newColor=2):");
-      printImage(result1);
-      
-      // Verify result
-      boolean test1Passed = result1[1][1] == 2 && result1[0][0] == 2 && 
-                          result1[0][1] == 2 && result1[0][2] == 2 && 
-                          result1[1][0] == 2 && result1[2][0] == 2;
-      System.out.println("Test 1 " + (test1Passed ? "PASSED" : "FAILED"));
-      
-      // Test Case 2: Single pixel
-      System.out.println("\nTest Case 2: Single pixel");
-      int[][] image2 = {{1}};
-      System.out.println("Before:");
-      printImage(image2);
-      
-      int[][] result2 = floodFill(image2, 0, 0, 3);
-      System.out.println("After flood fill (sr=0, sc=0, newColor=3):");
-      printImage(result2);
-      
-      // Verify result
-      boolean test2Passed = result2[0][0] == 3;
-      System.out.println("Test 2 " + (test2Passed ? "PASSED" : "FAILED"));
-      
-      // Test Case 3: No change needed (same color)
-      System.out.println("\nTest Case 3: No change needed (same color)");
-      int[][] image3 = {
-          {2, 2, 2},
-          {2, 2, 2},
-          {2, 2, 2}
-      };
-      System.out.println("Before:");
-      printImage(image3);
-      
-      int[][] result3 = floodFill(image3, 1, 1, 2);
-      System.out.println("After flood fill (sr=1, sc=1, newColor=2):");
-      printImage(result3);
-      
-      // Verify result
-      boolean test3Passed = result3[1][1] == 2 && 
-                          result3[0][0] == 2 && 
-                          result3[2][2] == 2;
-      System.out.println("Test 3 " + (test3Passed ? "PASSED" : "FAILED"));
-  }
+import java.util.*;
+
+class FloodFill {
+
+    public static void dfs(int[][] grid, int row, int col, int oldTarget, int newTarget) {
+        int[][] adjacentCells = {{0, 1}, {1, 0}, {-1, 0}, {0, -1}};
+
+        int gridLength = grid.length;
+        int totalCells = grid[0].length;
+
+        for (int[] cellValue : adjacentCells) {
+            int i = row + cellValue[0];
+            int j = col + cellValue[1];
+
+            if (i < gridLength && i >= 0 && j < totalCells && j >= 0 && grid[i][j] == oldTarget) {
+                grid[i][j] = newTarget;
+                dfs(grid, i, j, oldTarget, newTarget);
+            }
+        }
+    }
+
+    public static int[][] floodFill(int[][] grid, int sr, int sc, int target) {
+        if (grid[sr][sc] == target) {
+            return grid;
+        } else {
+            int oldTarget = grid[sr][sc];
+            grid[sr][sc] = target;
+            dfs(grid, sr, sc, oldTarget, target);
+
+            return grid;
+        }
+    }
+
+
+    // Driver code
+    public static void main(String[] args){
+        int[][][] grids = {
+                {{1, 1, 0, 1, 0}, 
+                {0, 0, 0, 0, 1}, 
+                {0, 0, 0, 1, 1}, 
+                {1, 1, 1, 1, 0}, 
+                {1, 0, 0, 0, 0}},
+
+                {{1, 1, 0, 1}, 
+                {0, 0, 0, 0}, 
+                {0, 0, 0, 1}, 
+                {1, 1, 1, 1}},
+
+                {{9, 9, 6, 9}, 
+                {6, 9, 9, 6}, 
+                {6, 9, 9, 9}, 
+                {9, 9, 9, 9}},
+
+                {{1, 1, 0, 1}, 
+                {0, 1, 0, 0}, 
+                {0, 1, 1, 0}, 
+                {1, 0, 1, 1}},
+        
+                {{1, 2, 0, 0}, 
+                {3, 1, 3, 6}, 
+                {7, 2, 1, 5}, 
+                {1, 9, 2, 1}}
+        };
+
+        int[] sr = {4, 2, 2, 2, 1};
+        int[] sc = {3, 3, 1, 3, 1};
+        int[] target = {3, 2, 1, 0, 4};
+
+        for (int i = 0; i < grids.length; i++) {
+            System.out.println((i + 1) + ".\t Grid before flood fill: " + Arrays.deepToString(grids[i]));
+            System.out.println("\t Starting row and column are: (" + sr[i] + ", " + sc[i] + ")");
+            System.out.println("\t Target value: " + target[i]);
+            
+            int[][] result = floodFill(grids[i], sr[i], sc[i], target[i]);
+            System.out.println("\t After perform flood fill: " + Arrays.deepToString(result));
+            System.out.println(new String(new char[100]).replace('\0', '-'));
+        }
+    }
 }
