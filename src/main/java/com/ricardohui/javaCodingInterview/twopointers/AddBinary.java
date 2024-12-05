@@ -11,7 +11,8 @@ public class AddBinary {
         while (i >= 0 || j >= 0 || carry > 0) {
             // Get current digits (0 if string is exhausted)
             int digitA = (i >= 0) ? Character.getNumericValue(a.charAt(i)) : 0;
-            int digitB = (j >= 0) ? Character.getNumericValue(b.charAt(j)) : 0;
+            
+            int digitB = (j >= 0) ? b.charAt(j) - '0' : 0;
             
             // Calculate sum of current digits and carry
             int currentSum = digitA + digitB + carry;
