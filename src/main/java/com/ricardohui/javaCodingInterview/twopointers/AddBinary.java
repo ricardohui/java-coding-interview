@@ -3,29 +3,24 @@ import java.util.*;
 public class AddBinary {
     public static String addBinary (String a, String b) {
         StringBuilder result = new StringBuilder();
-        int carry = 0;
+        
         int i = a.length() - 1;
         int j = b.length() - 1;
-        
-        // Add digits from right to left
-        while (i >= 0 || j >= 0 || carry > 0) {
-            // Get current digits (0 if string is exhausted)
-            int digitA = (i >= 0) ? Character.getNumericValue(a.charAt(i)) : 0;
+        int carryover = 0;        
+        while (i >= 0 || j >= 0 || carryover > 0){
+            int number1 = i >= 0 ? Character.getNumericValue(a.charAt(i)): 0; // consider the case of 0 + 1000, you need to give a default value for ease of calculation.
+            int number2 = j >= 0 ? b.charAt(j) - '0': 0;
+
+            int sum = number1 + number2 + carryover;
             
-            int digitB = (j >= 0) ? b.charAt(j) - '0' : 0;
+            int digit = sum % 2; // note the different use of %2 and /2. They gives different effects.
+            result.insert(0, digit);
+            carryover = sum / 2; 
             
-            // Calculate sum of current digits and carry
-            int currentSum = digitA + digitB + carry;
-            
-            // Prepend current digit to result
-            result.insert(0, currentSum % 2);
-            
-            // Update carry
-            carry = currentSum / 2;
-            
-            // Move to next digits
+
             i--;
             j--;
+
         }
         
         return result.toString();
